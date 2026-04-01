@@ -28,4 +28,23 @@ export class PromoCodesRepository {
       updatedAt: promoCode.updatedAt,
     };
   }
+
+  async findAll(): Promise<PromoCodeEntity[]> {
+    const promoCodes = await this.prismaService.promoCode.findMany({
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    return promoCodes.map((promoCode) => ({
+      id: promoCode.id,
+      code: promoCode.code,
+      discountPercent: promoCode.discountPercent,
+      activationLimit: promoCode.activationLimit,
+      activationCount: promoCode.activationCount,
+      expiresAt: promoCode.expiresAt,
+      createdAt: promoCode.createdAt,
+      updatedAt: promoCode.updatedAt,
+    }));
+  }
 }

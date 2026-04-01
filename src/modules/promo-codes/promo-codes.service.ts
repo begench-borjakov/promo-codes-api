@@ -19,4 +19,9 @@ export class PromoCodesService {
 
     return promoCode;
   }
+
+  async findAll(): Promise<PromoCodeEntity[]> {
+    const promoCodes = await this.promoCodesRepository.findAll();
+    return promoCodes;
+  }
 }
