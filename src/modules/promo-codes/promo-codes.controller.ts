@@ -1,4 +1,11 @@
-import { Body, Controller, Post, Get } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Get,
+  Param,
+  ParseUUIDPipe,
+} from '@nestjs/common';
 import { CreatePromoCodeDto } from './dto/create-promo-code.dto';
 import { PromoCodesService } from './promo-codes.service';
 import { PromoCodeRto } from './rto/promo-code.rto';
@@ -21,5 +28,14 @@ export class PromoCodesController {
     const promoCodes = await this.promoCodesService.findAll();
     const promoCodesRto = promoCodes.map(toPromoCodeRto);
     return promoCodesRto;
+  }
+
+  @Get(':id')
+  async findById(
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<PromoCodeRto> {
+    const promoCode = await this.promoCodesService.findById(id);
+
+    return toPromoCodeRto(promoCode);
   }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePromoCodeDto } from './dto/create-promo-code.dto';
 import { PromoCodeEntity } from './entities/promo-code.entity';
 import { PromoCodesRepository } from './promo-codes.repository';
@@ -23,5 +23,15 @@ export class PromoCodesService {
   async findAll(): Promise<PromoCodeEntity[]> {
     const promoCodes = await this.promoCodesRepository.findAll();
     return promoCodes;
+  }
+
+  async findById(id: string): Promise<PromoCodeEntity> {
+    const promoCode = await this.promoCodesRepository.findById(id);
+
+    if (!promoCode) {
+      throw new NotFoundException('Promo code not found');
+    }
+
+    return promoCode;
   }
 }
