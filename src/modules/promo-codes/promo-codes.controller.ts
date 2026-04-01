@@ -4,9 +4,11 @@ import {
   Post,
   Get,
   Param,
+  Patch,
   ParseUUIDPipe,
 } from '@nestjs/common';
 import { CreatePromoCodeDto } from './dto/create-promo-code.dto';
+import { UpdatePromoCodeDto } from './dto/update-promo-code.dto';
 import { PromoCodesService } from './promo-codes.service';
 import { PromoCodeRto } from './rto/promo-code.rto';
 import { toPromoCodeRto } from './mappers/promo-code.mapper';
@@ -37,5 +39,18 @@ export class PromoCodesController {
     const promoCode = await this.promoCodesService.findById(id);
 
     return toPromoCodeRto(promoCode);
+  }
+
+  @Patch(':id')
+  async update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() updatePromoCodeDto: UpdatePromoCodeDto,
+  ): Promise<PromoCodeRto> {
+    const updatedPromoCode = await this.promoCodesService.update(
+      id,
+      updatePromoCodeDto,
+    );
+
+    return toPromoCodeRto(updatedPromoCode);
   }
 }

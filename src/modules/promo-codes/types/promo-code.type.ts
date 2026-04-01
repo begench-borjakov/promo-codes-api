@@ -4,3 +4,9 @@ export interface CreatePromoCodePayload {
   activationLimit: number;
   expiresAt: Date;
 }
+
+export interface UpdatePromoCodePayload {
+  discountPercent?: number;
+  activationLimit?: number;
+  expiresAt?: Date;
+}
