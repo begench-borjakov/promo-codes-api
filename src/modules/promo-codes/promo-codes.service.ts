@@ -93,4 +93,14 @@ export class PromoCodesService {
 
     return updatedPromoCode;
   }
+
+  async remove(id: string): Promise<void> {
+    const existingPromoCode = await this.promoCodesRepository.findById(id);
+
+    if (!existingPromoCode) {
+      throw new NotFoundException('Promo code not found');
+    }
+
+    await this.promoCodesRepository.deleteById(id);
+  }
 }

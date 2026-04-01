@@ -100,4 +100,12 @@ export class PromoCodesRepository {
       updatedAt: promoCode.updatedAt,
     };
   }
+
+  async deleteById(id: string): Promise<void> {
+    await this.prismaService.promoCode.delete({
+      where: {
+        id,
+      },
+    });
+  }
 }

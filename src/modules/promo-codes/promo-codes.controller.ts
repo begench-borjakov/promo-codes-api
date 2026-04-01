@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Patch,
+  Delete,
   ParseUUIDPipe,
 } from '@nestjs/common';
 import { CreatePromoCodeDto } from './dto/create-promo-code.dto';
@@ -52,5 +53,10 @@ export class PromoCodesController {
     );
 
     return toPromoCodeRto(updatedPromoCode);
+  }
+
+  @Delete(':id')
+  async remove(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
+    await this.promoCodesService.remove(id);
   }
 }
