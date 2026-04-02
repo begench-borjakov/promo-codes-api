@@ -24,4 +24,20 @@ export class ActivationsRepository {
       activatedAt: activation.activatedAt,
     };
   }
+
+  async findAll(): Promise<ActivationEntity[]> {
+    const activations = await this.prismaService.activation.findMany({
+      orderBy: {
+        activatedAt: 'desc',
+      },
+    });
+
+    return activations.map((activation) => ({
+      id: activation.id,
+      promoCodeId: activation.promoCodeId,
+      email: activation.email,
+      discountPercentAtActivation: activation.discountPercentAtActivation,
+      activatedAt: activation.activatedAt,
+    }));
+  }
 }
