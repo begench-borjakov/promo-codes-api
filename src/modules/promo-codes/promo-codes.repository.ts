@@ -74,6 +74,29 @@ export class PromoCodesRepository {
     };
   }
 
+  async findByCode(code: string): Promise<PromoCodeEntity | null> {
+    const promoCode = await this.prismaService.promoCode.findUnique({
+      where: {
+        code,
+      },
+    });
+
+    if (!promoCode) {
+      return null;
+    }
+
+    return {
+      id: promoCode.id,
+      code: promoCode.code,
+      discountPercent: promoCode.discountPercent,
+      activationLimit: promoCode.activationLimit,
+      activationCount: promoCode.activationCount,
+      expiresAt: promoCode.expiresAt,
+      createdAt: promoCode.createdAt,
+      updatedAt: promoCode.updatedAt,
+    };
+  }
+
   async updateById(
     id: string,
     data: UpdatePromoCodePayload,
@@ -107,5 +130,31 @@ export class PromoCodesRepository {
         id,
       },
     });
+  }
+
+  async incrementPromoCodeActivationCount(
+    id: string,
+  ): Promise<PromoCodeEntity> {
+    const promoCode = await this.prismaService.promoCode.update({
+      where: {
+        id,
+      },
+      data: {
+        activationCount: {
+          increment: 1,
+        },
+      },
+    });
+
+    return {
+      id: promoCode.id,
+      code: promoCode.code,
+      discountPercent: promoCode.discountPercent,
+      activationLimit: promoCode.activationLimit,
+      activationCount: promoCode.activationCount,
+      expiresAt: promoCode.expiresAt,
+      createdAt: promoCode.createdAt,
+      updatedAt: promoCode.updatedAt,
+    };
   }
 }
