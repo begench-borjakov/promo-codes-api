@@ -1,7 +1,5 @@
-export class ActivationRto {
-  id: string;
+export interface CreateActivationPayload {
   promoCodeId: string;
   email: string;
   discountPercentAtActivation: number;
-  activatedAt: Date;
 }
