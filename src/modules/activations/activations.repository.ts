@@ -40,4 +40,30 @@ export class ActivationsRepository {
       activatedAt: activation.activatedAt,
     }));
   }
+
+  async findByPromoCodeIdAndEmail(
+    promoCodeId: string,
+    email: string,
+  ): Promise<ActivationEntity | null> {
+    const activation = await this.prismaService.activation.findUnique({
+      where: {
+        promoCodeId_email: {
+          promoCodeId,
+          email,
+        },
+      },
+    });
+
+    if (!activation) {
+      return null;
+    }
+
+    return {
+      id: activation.id,
+      promoCodeId: activation.promoCodeId,
+      email: activation.email,
+      discountPercentAtActivation: activation.discountPercentAtActivation,
+      activatedAt: activation.activatedAt,
+    };
+  }
 }
