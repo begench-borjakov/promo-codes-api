@@ -41,12 +41,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
         if (typeof msg === 'string') {
           message = msg;
-        } else if (
-          Array.isArray(msg) &&
-          msg.length > 0 &&
-          typeof msg[0] === 'string'
-        ) {
-          message = msg[0];
+        } else if (Array.isArray(msg) && msg.length > 0) {
+          message = msg
+            .filter((item): item is string => typeof item === 'string')
+            .join(', ');
         } else if (typeof exception.message === 'string' && exception.message) {
           message = exception.message;
         }

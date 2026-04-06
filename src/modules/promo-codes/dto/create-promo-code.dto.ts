@@ -1,3 +1,4 @@
+import { Transform } from 'class-transformer';
 import {
   IsDateString,
   IsInt,
@@ -10,21 +11,24 @@ import {
 } from 'class-validator';
 
 export class CreatePromoCodeDto {
+  @Transform(({ value }: { value: unknown }) =>
+    typeof value === 'string' ? value.trim() : value,
+  )
   @IsString()
   @IsNotEmpty()
   @MinLength(3)
   @MaxLength(50)
-  code: string;
+  code!: string;
 
   @IsInt()
   @Min(1)
   @Max(100)
-  discountPercent: number;
+  discountPercent!: number;
 
   @IsInt()
   @Min(1)
-  activationLimit: number;
+  activationLimit!: number;
 
   @IsDateString()
-  expiresAt: string;
+  expiresAt!: string;
 }

@@ -8,17 +8,19 @@ import {
 } from 'class-validator';
 
 export class CreateActivationDto {
-  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
+  @Transform(({ value }: { value: unknown }) =>
+    typeof value === 'string' ? value.trim() : value,
+  )
   @IsString()
   @IsNotEmpty()
   @MinLength(3)
   @MaxLength(50)
-  code: string;
+  code!: string;
 
-  @Transform(({ value }) =>
+  @Transform(({ value }: { value: unknown }) =>
     typeof value === 'string' ? value.trim().toLowerCase() : value,
   )
   @IsEmail()
   @IsNotEmpty()
-  email: string;
+  email!: string;
 }
