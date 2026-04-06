@@ -8,6 +8,7 @@ import { UpdatePromoCodeDto } from './dto/update-promo-code.dto';
 import { PromoCodeEntity } from './entities/promo-code.entity';
 import { PromoCodesRepository } from './promo-codes.repository';
 import { UpdatePromoCodePayload } from './types/promo-code.type';
+import { Prisma } from '../../../generated/prisma/client';
 
 @Injectable()
 export class PromoCodesService {
@@ -102,5 +103,42 @@ export class PromoCodesService {
     }
 
     await this.promoCodesRepository.deleteById(id);
+  }
+
+  async findByCodeTx(
+    tx: Prisma.TransactionClient,
+    code: string,
+  ): Promise<PromoCodeEntity> {
+    const promoCode = await this.promoCodesRepository.findByCodeTx(tx, code);
+
+    if (!promoCode) {
+      throw new NotFoundException('Promo code not found');
+    }
+
+    return promoCode;
+  }
+  validatePromoCodeAvailability(promoCode: PromoCodeEntity): void {
+    const now = new Date();
+
+    if (promoCode.expiresAt <= now) {
+      throw new BadRequestException('Promo code has expired');
+    }
+
+    if (promoCode.activationCount >= promoCode.activationLimit) {
+      throw new BadRequestException('Promo code activation limit exceeded');
+    }
+  }
+
+  async incrementActivationCountTx(
+    tx: Prisma.TransactionClient,
+    id: string,
+  ): Promise<PromoCodeEntity> {
+    const updatedPromoCode =
+      await this.promoCodesRepository.incrementPromoCodeActivationCountTx(
+        tx,
+        id,
+      );
+
+    return updatedPromoCode;
   }
 }

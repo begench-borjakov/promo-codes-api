@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma/prisma.service';
+import { Prisma } from '../../../generated/prisma/client';
 import { ActivationEntity } from './entities/activation.entity';
 import { CreateActivationPayload } from './types/activation.type';
 
@@ -7,8 +8,11 @@ import { CreateActivationPayload } from './types/activation.type';
 export class ActivationsRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async create(data: CreateActivationPayload): Promise<ActivationEntity> {
-    const activation = await this.prismaService.activation.create({
+  async createTx(
+    tx: Prisma.TransactionClient,
+    data: CreateActivationPayload,
+  ): Promise<ActivationEntity> {
+    const activation = await tx.activation.create({
       data: {
         promoCodeId: data.promoCodeId,
         email: data.email,
@@ -41,11 +45,12 @@ export class ActivationsRepository {
     }));
   }
 
-  async findByPromoCodeIdAndEmail(
+  async findByPromoCodeIdAndEmailTx(
+    tx: Prisma.TransactionClient,
     promoCodeId: string,
     email: string,
   ): Promise<ActivationEntity | null> {
-    const activation = await this.prismaService.activation.findUnique({
+    const activation = await tx.activation.findUnique({
       where: {
         promoCodeId_email: {
           promoCodeId,

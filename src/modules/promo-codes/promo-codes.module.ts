@@ -8,5 +8,6 @@ import { PromoCodesService } from './promo-codes.service';
   imports: [PrismaModule],
   controllers: [PromoCodesController],
   providers: [PromoCodesService, PromoCodesRepository],
+  exports: [PromoCodesService],
 })
 export class PromoCodesModule {}
