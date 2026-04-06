@@ -2,10 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma/prisma.service';
 import { Prisma } from '../../../generated/prisma/client';
 import { PromoCodeEntity } from './entities/promo-code.entity';
-import {
-  CreatePromoCodePayload,
-  UpdatePromoCodePayload,
-} from './types/promo-code.type';
+import { CreatePromoCodePayload, UpdatePromoCodePayload } from './types/promo-code.type';
 
 @Injectable()
 export class PromoCodesRepository {
@@ -75,10 +72,7 @@ export class PromoCodesRepository {
     };
   }
 
-  async findByCodeTx(
-    tx: Prisma.TransactionClient,
-    code: string,
-  ): Promise<PromoCodeEntity | null> {
+  async findByCodeTx(tx: Prisma.TransactionClient, code: string): Promise<PromoCodeEntity | null> {
     const promoCode = await tx.promoCode.findUnique({
       where: {
         code,
@@ -101,10 +95,7 @@ export class PromoCodesRepository {
     };
   }
 
-  async updateById(
-    id: string,
-    data: UpdatePromoCodePayload,
-  ): Promise<PromoCodeEntity> {
+  async updateById(id: string, data: UpdatePromoCodePayload): Promise<PromoCodeEntity> {
     const promoCode = await this.prismaService.promoCode.update({
       where: {
         id,

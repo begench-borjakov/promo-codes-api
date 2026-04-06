@@ -1,4 +1,4 @@
-export class PromoCodeEntity {
+export interface PromoCodeEntity {
   id: string;
   code: string;
   discountPercent: number;

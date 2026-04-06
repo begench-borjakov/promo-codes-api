@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-  BadRequestException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { CreatePromoCodeDto } from './dto/create-promo-code.dto';
 import { UpdatePromoCodeDto } from './dto/update-promo-code.dto';
 import { PromoCodeEntity } from './entities/promo-code.entity';
@@ -14,9 +10,7 @@ import { Prisma } from '../../../generated/prisma/client';
 export class PromoCodesService {
   constructor(private readonly promoCodesRepository: PromoCodesRepository) {}
 
-  async create(
-    createPromoCodeDto: CreatePromoCodeDto,
-  ): Promise<PromoCodeEntity> {
+  async create(createPromoCodeDto: CreatePromoCodeDto): Promise<PromoCodeEntity> {
     const promoCode = await this.promoCodesRepository.create({
       code: createPromoCodeDto.code,
       discountPercent: createPromoCodeDto.discountPercent,
@@ -42,10 +36,7 @@ export class PromoCodesService {
     return promoCode;
   }
 
-  async update(
-    id: string,
-    updatePromoCodeDto: UpdatePromoCodeDto,
-  ): Promise<PromoCodeEntity> {
+  async update(id: string, updatePromoCodeDto: UpdatePromoCodeDto): Promise<PromoCodeEntity> {
     const existingPromoCode = await this.promoCodesRepository.findById(id);
 
     if (!existingPromoCode) {
@@ -76,9 +67,7 @@ export class PromoCodesService {
       updatePromoCodeDto.activationLimit !== undefined &&
       updatePromoCodeDto.activationLimit < existingPromoCode.activationCount
     ) {
-      throw new BadRequestException(
-        'Activation limit cannot be less than activation count',
-      );
+      throw new BadRequestException('Activation limit cannot be less than activation count');
     }
 
     const updateData: UpdatePromoCodePayload = {
@@ -87,10 +76,7 @@ export class PromoCodesService {
       expiresAt: expiresAtDate,
     };
 
-    const updatedPromoCode = await this.promoCodesRepository.updateById(
-      id,
-      updateData,
-    );
+    const updatedPromoCode = await this.promoCodesRepository.updateById(id, updateData);
 
     return updatedPromoCode;
   }
@@ -105,10 +91,7 @@ export class PromoCodesService {
     await this.promoCodesRepository.deleteById(id);
   }
 
-  async findByCodeTx(
-    tx: Prisma.TransactionClient,
-    code: string,
-  ): Promise<PromoCodeEntity> {
+  async findByCodeTx(tx: Prisma.TransactionClient, code: string): Promise<PromoCodeEntity> {
     const promoCode = await this.promoCodesRepository.findByCodeTx(tx, code);
 
     if (!promoCode) {
@@ -133,11 +116,10 @@ export class PromoCodesService {
     tx: Prisma.TransactionClient,
     id: string,
   ): Promise<PromoCodeEntity> {
-    const updatedPromoCode =
-      await this.promoCodesRepository.incrementPromoCodeActivationCountTx(
-        tx,
-        id,
-      );
+    const updatedPromoCode = await this.promoCodesRepository.incrementPromoCodeActivationCountTx(
+      tx,
+      id,
+    );
 
     return updatedPromoCode;
   }

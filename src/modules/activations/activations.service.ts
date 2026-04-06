@@ -25,17 +25,14 @@ export class ActivationsService {
     promoCodeId: string,
     email: string,
   ): Promise<void> {
-    const existingActivation =
-      await this.activationsRepository.findByPromoCodeIdAndEmailTx(
-        tx,
-        promoCodeId,
-        email,
-      );
+    const existingActivation = await this.activationsRepository.findByPromoCodeIdAndEmailTx(
+      tx,
+      promoCodeId,
+      email,
+    );
 
     if (existingActivation) {
-      throw new ConflictException(
-        'This email has already activated the promo code',
-      );
+      throw new ConflictException('This email has already activated the promo code');
     }
   }
 
@@ -52,22 +49,13 @@ export class ActivationsService {
     });
   }
 
-  async activate(
-    createActivationDto: CreateActivationDto,
-  ): Promise<ActivationEntity> {
+  async activate(createActivationDto: CreateActivationDto): Promise<ActivationEntity> {
     const activation = await this.prismaService.$transaction(async (tx) => {
-      const promoCode = await this.promoCodesService.findByCodeTx(
-        tx,
-        createActivationDto.code,
-      );
+      const promoCode = await this.promoCodesService.findByCodeTx(tx, createActivationDto.code);
 
       this.promoCodesService.validatePromoCodeAvailability(promoCode);
 
-      await this.ensureActivationDoesNotExistTx(
-        tx,
-        promoCode.id,
-        createActivationDto.email,
-      );
+      await this.ensureActivationDoesNotExistTx(tx, promoCode.id, createActivationDto.email);
 
       const createdActivation = await this.createActivationTx(
         tx,

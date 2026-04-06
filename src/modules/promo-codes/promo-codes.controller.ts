@@ -1,13 +1,4 @@
-import {
-  Body,
-  Controller,
-  Post,
-  Get,
-  Param,
-  Patch,
-  Delete,
-  ParseUUIDPipe,
-} from '@nestjs/common';
+import { Body, Controller, Post, Get, Param, Patch, Delete, ParseUUIDPipe } from '@nestjs/common';
 import { CreatePromoCodeDto } from './dto/create-promo-code.dto';
 import { UpdatePromoCodeDto } from './dto/update-promo-code.dto';
 import { PromoCodesService } from './promo-codes.service';
@@ -19,9 +10,7 @@ export class PromoCodesController {
   constructor(private readonly promoCodesService: PromoCodesService) {}
 
   @Post()
-  async create(
-    @Body() createPromoCodeDto: CreatePromoCodeDto,
-  ): Promise<PromoCodeRto> {
+  async create(@Body() createPromoCodeDto: CreatePromoCodeDto): Promise<PromoCodeRto> {
     const promoCode = await this.promoCodesService.create(createPromoCodeDto);
     return toPromoCodeRto(promoCode);
   }
@@ -34,9 +23,7 @@ export class PromoCodesController {
   }
 
   @Get(':id')
-  async findById(
-    @Param('id', ParseUUIDPipe) id: string,
-  ): Promise<PromoCodeRto> {
+  async findById(@Param('id', ParseUUIDPipe) id: string): Promise<PromoCodeRto> {
     const promoCode = await this.promoCodesService.findById(id);
 
     return toPromoCodeRto(promoCode);
@@ -47,10 +34,7 @@ export class PromoCodesController {
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updatePromoCodeDto: UpdatePromoCodeDto,
   ): Promise<PromoCodeRto> {
-    const updatedPromoCode = await this.promoCodesService.update(
-      id,
-      updatePromoCodeDto,
-    );
+    const updatedPromoCode = await this.promoCodesService.update(id, updatePromoCodeDto);
 
     return toPromoCodeRto(updatedPromoCode);
   }

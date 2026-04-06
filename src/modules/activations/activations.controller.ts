@@ -9,11 +9,8 @@ export class ActivationsController {
   constructor(private readonly activationsService: ActivationsService) {}
 
   @Post()
-  async activate(
-    @Body() createActivationDto: CreateActivationDto,
-  ): Promise<ActivationRto> {
-    const activation =
-      await this.activationsService.activate(createActivationDto);
+  async activate(@Body() createActivationDto: CreateActivationDto): Promise<ActivationRto> {
+    const activation = await this.activationsService.activate(createActivationDto);
 
     return toActivationRto(activation);
   }
